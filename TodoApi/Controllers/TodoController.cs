@@ -51,7 +51,37 @@ namespace TodoApi.Controllers
         {
             await _context.TodoItems.AddAsync(item);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetTodoItem), new { Id = item.Id }, item);
+            return CreatedAtAction(nameof(GetTodoItem), new { id = item.Id }, item);
+        }
+
+        //PUT : api/Todo 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PuttodoItem(long id, TodoItem modifiedItem)
+        {
+            if (id != modifiedItem.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(modifiedItem).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        // delete : api/Todo
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTodoItem(long id)
+        {
+            var item = await _context.TodoItems.FindAsync(id);
+            if (item==null)
+            {
+                return BadRequest();
+            }
+
+            _context.TodoItems.Remove(item);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
 
@@ -59,39 +89,36 @@ namespace TodoApi.Controllers
 
 
 
-
-
-
         //// GET: api/<controller>
-       // [HttpGet]
-    //    public IEnumerable<string> Get()
-    //    {
-    //        return new string[] { "value1", "value2" };
-    //    }
+        // [HttpGet]
+        //    public IEnumerable<string> Get()
+        //    {
+        //        return new string[] { "value1", "value2" };
+        //    }
 
-    //    // GET api/<controller>/5
-    //    [HttpGet("{id}")]
-    //    public string Get(int id)
-    //    {
-    //        return "value";
-    //    }
+        //    // GET api/<controller>/5
+        //    [HttpGet("{id}")]
+        //    public string Get(int id)
+        //    {
+        //        return "value";
+        //    }
 
-    //    // POST api/<controller>
-    //    [HttpPost]
-    //    public void Post([FromBody]string value)
-    //    {
-    //    }
+        //    // POST api/<controller>
+        //    [HttpPost]
+        //    public void Post([FromBody]string value)
+        //    {
+        //    }
 
-    //    // PUT api/<controller>/5
-    //    [HttpPut("{id}")]
-    //    public void Put(int id, [FromBody]string value)
-    //    {
-    //    }
+        //    // PUT api/<controller>/5
+        //    [HttpPut("{id}")]
+        //    public void Put(int id, [FromBody]string value)
+        //    {
+        //    }
 
-    //    // DELETE api/<controller>/5
-    //    [HttpDelete("{id}")]
-    //    public void Delete(int id)
-    //    {
-    //    }
+        //    // DELETE api/<controller>/5
+        //    [HttpDelete("{id}")]
+        //    public void Delete(int id)
+        //    {
+        //    }
     }
 }
