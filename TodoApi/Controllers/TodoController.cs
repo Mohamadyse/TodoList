@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,12 @@ namespace TodoApi.Controllers
 
         public TodoController(TodoContext context)
         {
-            this._context = context;
-            if (_context.TodoItems.Count()==0)
+            _context = context;
+            if (!_context.TodoItems.Any())
             {
+
                 _context.TodoItems.Add(new TodoItem {Name = "Item1"});
+                _context.TodoItems.Add(new TodoItem { Name = "Item2" });
                 _context.SaveChanges();
             }
         }
@@ -46,6 +49,11 @@ namespace TodoApi.Controllers
         }
 
         // POST : api/Todo
+        /// <summary>
+        /// this is a to delete a specific item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem item)
         {
@@ -93,7 +101,7 @@ namespace TodoApi.Controllers
         // [HttpGet]
         //    public IEnumerable<string> Get()
         //    {
-        //        return new string[] { "value1", "value2" };
+        //        return new string[] { "value1", "value2" };  
         //    }
 
         //    // GET api/<controller>/5
